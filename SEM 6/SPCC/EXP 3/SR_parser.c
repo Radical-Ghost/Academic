@@ -6,31 +6,37 @@
 #define MAX_RULES 50
 #define MAX_SYMBOLS 20
 
+// Structure to represent a production rule
 typedef struct {
-    char lhs;
-    char rhs[MAX_SYMBOLS];
+    char lhs; // Left-hand side of the production
+    char rhs[MAX_SYMBOLS]; // Right-hand side of the production
 } Production;
+
 Production grammar[MAX_RULES];
 int numProductions = 0;
 
 char input[MAX];
-int ip_ptr = 0, st_ptr = 0, len;
+int ip_ptr = 0, len;
 
 typedef struct {
     char items[MAX];
     int top;
 } Stack;
+
 Stack stack;
 
+// Function to initialize the stack
 void initStack() {
     stack.top = -1;
     stack.items[0] = '\0';
 }
 
+// Function to check if the stack is empty
 int isStackEmpty() {
     return stack.top == -1;
 }
 
+// Function to push a symbol onto the stack
 void push(char symbol) {
     if (stack.top < MAX - 1) {
         stack.items[++stack.top] = symbol;
@@ -40,6 +46,7 @@ void push(char symbol) {
     }
 }
 
+// Function to pop a symbol from the stack
 char pop() {
     if (!isStackEmpty()) {
         char symbol = stack.items[stack.top--];
@@ -51,6 +58,7 @@ char pop() {
     }
 }
 
+// Function to peek the top symbol of the stack
 char peek() {
     if (!isStackEmpty()) {
         return stack.items[stack.top];
@@ -59,6 +67,7 @@ char peek() {
     }
 }
 
+// Function to check and reduce the stack using the grammar rules
 int checkAndReduce(char *action) {
     for (int i = 0; i < numProductions; i++) {
         int lenRHS = strlen(grammar[i].rhs);
@@ -73,10 +82,12 @@ int checkAndReduce(char *action) {
     return 0;
 }
 
+// Function to print the current state of the stack, input string, and action
 void printState(const char *action) {
     printf("%-20s %-20s %-20s\n", stack.items, input + ip_ptr, action);
 }
 
+// Function to parse the input string using the grammar rules
 void parse() {
     push('$');
 
@@ -106,6 +117,7 @@ void parse() {
     }
 }
 
+// Function to load the grammar from a file
 void loadGrammar(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {
@@ -132,6 +144,7 @@ void loadGrammar(const char *filename) {
     fclose(file);
 }
 
+// Function to load the input string from a file
 void loadInputString(const char *filename) {
     FILE *file = fopen(filename, "r");
     if (!file) {

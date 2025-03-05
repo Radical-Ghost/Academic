@@ -5,6 +5,7 @@
 
 #define MAX_INSTRUCTIONS 100
 
+// Structure to represent a TAC (Three Address Code) instruction
 typedef struct {
     char op[10];
     char arg1[10];
@@ -15,15 +16,19 @@ typedef struct {
 TACInstruction tac[MAX_INSTRUCTIONS];
 int tacIndex = 0;
 
+// Function to print the TAC instructions
 void printTAC() {
     for (int i = 0; i < tacIndex; i++) {
         if(strcmp(tac[i].op, "None") != 0) {
-            if(strcmp(tac[i].arg2, "None") == 0) printf("%s = %s\n", tac[i].result, tac[i].arg1);
-            else printf("%s = %s %s %s\n", tac[i].result, tac[i].arg1, tac[i].op, tac[i].arg2);
+            if(strcmp(tac[i].arg2, "None") == 0) 
+                printf("%s = %s\n", tac[i].result, tac[i].arg1);
+            else 
+                printf("%s = %s %s %s\n", tac[i].result, tac[i].arg1, tac[i].op, tac[i].arg2);
         }
     }
 }
 
+// Function to remove redundant assignments
 void removeRedundant() {
     for (int i = 0; i < tacIndex; i++)
         if (strcmp(tac[i].op, "None") != 0)
@@ -40,6 +45,7 @@ void removeRedundant() {
                 }
 }
 
+// Function to remove common sub-expressions
 void removeCommonSubExpressions() {
     for (int i = 0; i < tacIndex; i++)
         if (strcmp(tac[i].op, "None") != 0)
@@ -56,7 +62,8 @@ void removeCommonSubExpressions() {
                 }
 }
 
-void constantFlooding() {
+// Function to perform constant folding
+void constantFolding() {
     for (int i = 0; i < tacIndex; i++) {
         if (strcmp(tac[i].op, "None") != 0)
             if (isdigit(tac[i].arg1[0]) && isdigit(tac[i].arg2[0])) {
@@ -75,6 +82,7 @@ void constantFlooding() {
     }
 }
 
+// Function to check if a result is used later in the TAC
 int isUsedLater(int ptr) {
     for (int i = 0; i < tacIndex; i++)
         if (ptr != i)
@@ -83,6 +91,7 @@ int isUsedLater(int ptr) {
     return 0;
 }
 
+// Function to remove dead code
 void removeDeadCode() {
     for (int i = 0; i < tacIndex - 1; i++)
         if (strcmp(tac[i].op, "None") != 0)
@@ -90,6 +99,7 @@ void removeDeadCode() {
                 strcpy(tac[i].op, "None");
 }
 
+// Function to input TAC instructions from the user
 void inputTAC() {
     int n;
     printf("Enter the number of instructions: ");
@@ -104,6 +114,7 @@ void inputTAC() {
     }
 }
 
+// Function to input predefined TAC instructions
 void Input() {
     strcpy(tac[tacIndex].op, "+");
     strcpy(tac[tacIndex].arg1, "3");
@@ -119,13 +130,13 @@ void Input() {
 
     strcpy(tac[tacIndex].op, "-");
     strcpy(tac[tacIndex].arg1, "3");
-    strcpy(tac[tacIndex].arg2, "t1");
+    strcpy(tac[tacIndex].arg2, "t6");
     strcpy(tac[tacIndex].result, "t7");
     tacIndex++;
 
     strcpy(tac[tacIndex].op, "-");
     strcpy(tac[tacIndex].arg1, "5");
-    strcpy(tac[tacIndex].arg2, "t1");
+    strcpy(tac[tacIndex].arg2, "t6");
     strcpy(tac[tacIndex].result, "t2");
     tacIndex++;
 
@@ -149,13 +160,23 @@ void Input() {
 }
 
 void main() {
-    //inputTAC();
+    // Uncomment the following line to input TAC instructions from the user
+    // inputTAC();
+    
+    // Input predefined TAC instructions
     Input();
 
-    printf("Optimized TAC:\n");
+    // Print the initial TAC
+    printf("Initial TAC:\n");
+    printTAC();
+    
+    // Perform optimizations
+    printf("\nOptimized TAC:\n");
     removeRedundant();
     removeCommonSubExpressions();
-    constantFlooding();
+    constantFolding();
     removeDeadCode();
+    
+    // Print the optimized TAC
     printTAC();
 }
