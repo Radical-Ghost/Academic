@@ -1,0 +1,161 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+#define MAX_INSTRUCTIONS 100
+
+typedef struct {
+    char op[10];
+    char arg1[10];
+    char arg2[10];
+    char result[10]; 
+} TACInstruction;
+
+TACInstruction tac[MAX_INSTRUCTIONS];
+int tacIndex = 0;
+
+void printTAC() {
+    for (int i = 0; i < tacIndex; i++) {
+        if(strcmp(tac[i].op, "None") != 0) {
+            if(strcmp(tac[i].arg2, "None") == 0) printf("%s = %s\n", tac[i].result, tac[i].arg1);
+            else printf("%s = %s %s %s\n", tac[i].result, tac[i].arg1, tac[i].op, tac[i].arg2);
+        }
+    }
+}
+
+void removeRedundant() {
+    for (int i = 0; i < tacIndex; i++)
+        if (strcmp(tac[i].op, "None") != 0)
+            for (int j = 0; j < tacIndex; j++)
+                if (i != j && strcmp(tac[i].result, tac[j].arg1) == 0 && strcmp(tac[j].op, "=") == 0) {
+                    strcpy(tac[j].op, "None");
+                    for (int k = 0; k < tacIndex; k++) {
+                        if (k != j) {  
+                            if (strcmp(tac[k].arg1, tac[j].result) == 0) strcpy(tac[k].arg1, tac[i].result);
+                            if (strcmp(tac[k].arg2, tac[j].result) == 0) strcpy(tac[k].arg2, tac[i].result);
+                            if (strcmp(tac[k].result, tac[j].result) == 0) strcpy(tac[k].result, tac[i].result);
+                        }
+                    }
+                }
+}
+
+void removeCommonSubExpressions() {
+    for (int i = 0; i < tacIndex; i++)
+        if (strcmp(tac[i].op, "None") != 0)
+            for (int j = 0; j < tacIndex; j++)
+                if (i != j && strcmp(tac[i].arg1, tac[j].arg1) == 0 && strcmp(tac[i].arg2, tac[j].arg2) == 0 && strcmp(tac[i].op, tac[j].op) == 0) {
+                    strcpy(tac[j].op, "None");
+                    for (int k = 0; k < tacIndex; k++) {
+                        if (k != j) {  
+                            if (strcmp(tac[k].arg1, tac[j].result) == 0) strcpy(tac[k].arg1, tac[i].result);
+                            if (strcmp(tac[k].arg2, tac[j].result) == 0) strcpy(tac[k].arg2, tac[i].result);
+                            if (strcmp(tac[k].result, tac[j].result) == 0) strcpy(tac[k].result, tac[i].result);
+                        }
+                    }
+                }
+}
+
+void constantFlooding() {
+    for (int i = 0; i < tacIndex; i++) {
+        if (strcmp(tac[i].op, "None") != 0)
+            if (isdigit(tac[i].arg1[0]) && isdigit(tac[i].arg2[0])) {
+                int val1 = strtol(tac[i].arg1, NULL, 10);
+                int val2 = strtol(tac[i].arg2, NULL, 10);
+                int result;
+                
+                if (strcmp(tac[i].op, "+") == 0) result = val1 + val2;
+                else if (strcmp(tac[i].op, "-") == 0) result = val1 - val2;
+                else if (strcmp(tac[i].op, "*") == 0) result = val1 * val2;
+                else if (strcmp(tac[i].op, "/") == 0) result = val1 / val2;
+                
+                sprintf(tac[i].arg1, "%d", result);
+                strcpy(tac[i].arg2, "None");
+            }             
+    }
+}
+
+int isUsedLater(int ptr) {
+    for (int i = 0; i < tacIndex; i++)
+        if (ptr != i)
+            if (strcmp(tac[ptr].result, tac[i].arg1) == 0 || strcmp(tac[ptr].result, tac[i].arg2) == 0)
+                return 1;   
+    return 0;
+}
+
+void removeDeadCode() {
+    for (int i = 0; i < tacIndex - 1; i++)
+        if (strcmp(tac[i].op, "None") != 0)
+            if(!isUsedLater(i)) 
+                strcpy(tac[i].op, "None");
+}
+
+void inputTAC() {
+    int n;
+    printf("Enter the number of instructions: ");
+    scanf("%d", &n);
+    
+    getchar();
+
+    for (int i = 0; i < n; i++) {
+        printf("Enter instruction %d (operation arg1 arg2 result): ", i + 1);
+        scanf("%s %s %s %s", tac[i].op, tac[i].arg1, tac[i].arg2, tac[i].result);
+        tacIndex++;
+    }
+}
+
+void Input() {
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "3");
+    strcpy(tac[tacIndex].arg2, "4");
+    strcpy(tac[tacIndex].result, "t1");
+    tacIndex++;
+    
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "3");
+    strcpy(tac[tacIndex].arg2, "4");
+    strcpy(tac[tacIndex].result, "t6");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "-");
+    strcpy(tac[tacIndex].arg1, "3");
+    strcpy(tac[tacIndex].arg2, "t1");
+    strcpy(tac[tacIndex].result, "t7");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "-");
+    strcpy(tac[tacIndex].arg1, "5");
+    strcpy(tac[tacIndex].arg2, "t1");
+    strcpy(tac[tacIndex].result, "t2");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "t6");
+    strcpy(tac[tacIndex].arg2, "t2");
+    strcpy(tac[tacIndex].result, "t3");
+    tacIndex++;
+    
+    strcpy(tac[tacIndex].op, "=");
+    strcpy(tac[tacIndex].arg1, "t3");
+    strcpy(tac[tacIndex].arg2, "None");
+    strcpy(tac[tacIndex].result, "t4");
+    tacIndex++;
+    
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "t3");
+    strcpy(tac[tacIndex].arg2, "t4");
+    strcpy(tac[tacIndex].result, "t5");
+    tacIndex++;
+}
+
+void main() {
+    //inputTAC();
+    Input();
+
+    printf("Optimized TAC:\n");
+    removeRedundant();
+    removeCommonSubExpressions();
+    constantFlooding();
+    removeDeadCode();
+    printTAC();
+}
