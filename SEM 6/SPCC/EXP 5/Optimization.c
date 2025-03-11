@@ -159,6 +159,116 @@ void Input() {
     tacIndex++;
 }
 
+void Input2() {
+    tacIndex = 0;
+
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "3");
+    strcpy(tac[tacIndex].arg2, "4");
+    strcpy(tac[tacIndex].result, "t0");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "a");
+    strcpy(tac[tacIndex].arg2, "b");
+    strcpy(tac[tacIndex].result, "t1");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "=");
+    strcpy(tac[tacIndex].arg1, "t1");
+    strcpy(tac[tacIndex].arg2, "None");
+    strcpy(tac[tacIndex].result, "t2");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "t2");
+    strcpy(tac[tacIndex].arg2, "1");
+    strcpy(tac[tacIndex].result, "t8");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "t2");
+    strcpy(tac[tacIndex].arg2, "c");
+    strcpy(tac[tacIndex].result, "t3");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "a");
+    strcpy(tac[tacIndex].arg2, "b");
+    strcpy(tac[tacIndex].result, "t4");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "-");
+    strcpy(tac[tacIndex].arg1, "t4");
+    strcpy(tac[tacIndex].arg2, "d");
+    strcpy(tac[tacIndex].result, "t5");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "/");
+    strcpy(tac[tacIndex].arg1, "t3");
+    strcpy(tac[tacIndex].arg2, "t5");
+    strcpy(tac[tacIndex].result, "t6");
+    tacIndex++;
+}
+
+void Input3() {
+    tacIndex = 0;
+
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "2");
+    strcpy(tac[tacIndex].arg2, "3");
+    strcpy(tac[tacIndex].result, "t1");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "+");
+    strcpy(tac[tacIndex].arg1, "t1");
+    strcpy(tac[tacIndex].arg2, "4");
+    strcpy(tac[tacIndex].result, "t2");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "-");
+    strcpy(tac[tacIndex].arg1, "5");
+    strcpy(tac[tacIndex].arg2, "1");
+    strcpy(tac[tacIndex].result, "t3");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "/");
+    strcpy(tac[tacIndex].arg1, "t2");
+    strcpy(tac[tacIndex].arg2, "t3");
+    strcpy(tac[tacIndex].result, "t4");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "t4");
+    strcpy(tac[tacIndex].arg2, "t4");
+    strcpy(tac[tacIndex].result, "t5");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "=");
+    strcpy(tac[tacIndex].arg1, "t5");
+    strcpy(tac[tacIndex].arg2, "None");
+    strcpy(tac[tacIndex].result, "t9");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "-");
+    strcpy(tac[tacIndex].arg1, "t5");
+    strcpy(tac[tacIndex].arg2, "t4");
+    strcpy(tac[tacIndex].result, "t6");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "2");
+    strcpy(tac[tacIndex].arg2, "3");
+    strcpy(tac[tacIndex].result, "t8");
+    tacIndex++;
+
+    strcpy(tac[tacIndex].op, "*");
+    strcpy(tac[tacIndex].arg1, "t9");
+    strcpy(tac[tacIndex].arg2, "2");
+    strcpy(tac[tacIndex].result, "t7");
+    tacIndex++;
+}
+
 void main() {
     // Uncomment the following line to input TAC instructions from the user
     // inputTAC();
@@ -179,4 +289,40 @@ void main() {
     
     // Print the optimized TAC
     printTAC();
+
+    printf("\n\n\n");
+
+    Input2();
+
+    // Print the initial TAC
+    printf("Initial TAC:\n");
+    printTAC();
+    
+    // Perform optimizations
+    printf("\nOptimized TAC:\n");
+    removeRedundant();
+    removeCommonSubExpressions();
+    constantFolding();
+    removeDeadCode();
+    
+    // Print the optimized TAC
+    printTAC();
+    
+    printf("\n\n\n");
+    Input3();
+
+    // Print the initial TAC
+    printf("Initial TAC:\n");
+    printTAC();
+    
+    // Perform optimizations
+    printf("\nOptimized TAC:\n");
+    removeRedundant();
+    removeCommonSubExpressions();
+    constantFolding();
+    removeDeadCode();
+    
+    // Print the optimized TAC
+    printTAC();
+
 }
