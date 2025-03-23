@@ -1,67 +1,41 @@
-# diffie_hellman.py
+import math
 
-def prime_checker(p):
-    # Checks if the number entered is a prime number or not
-    if p < 1:
-        return -1
-    elif p > 1:
-        if p == 2:
-            return 1
-        for i in range(2, p):
-            if p % i == 0:
-                return -1
-        return 1
+def gcd(a, h):
+    while h != 0:
+        a, h = h, a % h
+    return a
 
-def primitive_check(g, p, L):
-    # Checks if the entered number is a primitive root or not
-    for i in range(1, p):
-        L.append(pow(g, i) % p)
-    for i in range(1, p):
-        if L.count(i) > 1:
-            L.clear()
-            return -1
-    return 1
+def mod_inverse(e, phi):
+    t, new_t = 0, 1
+    r, new_r = phi, e
+    while new_r != 0:
+        quotient = r // new_r
+        t, new_t = new_t, t - quotient * new_t
+        r, new_r = new_r, r - quotient * new_r
+    if r > 1:
+        raise ValueError("e is not invertible")
+    if t < 0:
+        t = t + phi
+    return t
 
-# Main code
-L = []
-while True:
-    P = int(input("Enter P (prime number): "))
-    if prime_checker(P) == -1:
-        print("Number is not prime, please enter again!")
-        continue
-    break
+p = int(input("Enter prime number p: "))
+q = int(input("Enter prime number q: "))
+n = p * q
+phi = (p - 1) * (q - 1)
 
-while True:
-    G = int(input(f"Enter the primitive root of {P}: "))
-    if primitive_check(G, P, L) == -1:
-        print(f"Number is not a primitive root of {P}, please try again!")
-        continue
-    break
+print(f"Calculated totient (phi) = {phi}")
 
-# Private keys
-x1 = int(input("Enter the private key of user 1: "))
-x2 = int(input("Enter the private key of user 2: "))
+e = int(input("\nEnter value for e (must be co-prime with phi and less than phi): "))
+while gcd(e, phi) != 1 or e >= phi:
+    e = int(input("Invalid input. Enter value for e (must be co-prime with phi and less than phi): "))
 
-while True:
-    if x1 >= P or x2 >= P:
-        print(f"Private key of both users should be less than {P}!")
-        x1 = int(input("Enter the private key of user 1: "))
-        x2 = int(input("Enter the private key of user 2: "))
-    else:
-        break
+d = mod_inverse(e, phi)
 
-# Calculate public keys
-y1 = pow(G, x1) % P
-y2 = pow(G, x2) % P
+msg = int(input("Enter message to be encrypted: "))
+print("Message data =", msg)
 
-# Generate secret keys
-k1 = pow(y2, x1) % P
-k2 = pow(y1, x2) % P
+c = pow(msg, e, n)
+print("Encrypted data =", c)
 
-print(f"\nSecret key for user 1 is {k1}")
-print(f"Secret key for user 2 is {k2}\n")
-
-if k1 == k2:
-    print("Keys have been exchanged successfully!")
-else:
-    print("Keys have not been exchanged successfully!")
+m = pow(c, d, n)
+print("Original Message Sent =", m)
