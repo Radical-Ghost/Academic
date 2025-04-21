@@ -223,3 +223,144 @@
 //     return 0;
 // }
 
+// %{
+// #inlcude <stdio.h>
+// #inlcude <stdlib.h>
+// %}
+
+// digits[0-9]
+
+// %%
+// {digits}+               {printf("Number is a Integer.");}
+// {digits}+"\\."{digits}+ {printf("Number is a float.");}
+// .                       {printf("Number is neither a float or integar.");}
+// %%
+
+// int yywrap() {
+//     return 1;
+// }
+
+// int main(){
+//     printf("\nEnter a number: ")
+//     yylex();
+//     return 0;
+// }
+
+// %{
+// #include <stdio.h>
+// #include <stblib.h>
+// %}
+
+// digits[0-9]
+// chars[a-zA-Z]
+
+// %%
+// {chars}({chars}|{digits})*  {printf("It is a identifier.");}
+// .                           {printf("Its not a identifier.");}
+// %%
+
+// int yywrap() {
+//     return 1;
+// }
+
+// int main() {
+//     printf("\nEnter a identifier: ");
+//     yylex();
+//     return 0;
+// }
+
+// #include <stdio.h>
+// #include <ctype.h>
+// #include <stdlib.h>
+// #include <string.h>
+
+// typedef struct {
+//     char items[100];
+//     int top;
+// } Stack;
+
+// Stack stack;
+
+// typedef struct {
+//     char lhs;
+//     char rhs[100];
+// } Production;
+
+// Production grammar[100];
+// int numProds = 0;
+// int in_ptr = 0, len;
+// char input[100], action[100];
+
+// void initStack() { stack.top = -1; stack.items[0] = '\0'; }
+// void push(char symbol) { stack.items[++stack.top] = symbol; stack.items[stack.top+1] = '\0'; }
+
+// int checkandreduce() {
+//     for (int i = 0; i < numProds; i++) {
+//         int lenRHS = strlen(grammar[i].rhs);
+//         if (stack.top + 1 >= lenRHS && strncmp(stack.items + stack.top - lenRHS + 1, grammar[i].rhs, lenRHS) == 0) {
+//             stack.top -= lenRHS;
+//             push(grammar[i].lhs);
+//             sprintf(action, "Reduce: %c->%s", grammar[i].lhs, grammar[i].rhs);
+//             return 1;
+//         }
+//     }
+//     return 0;
+// }
+
+// void printState() {
+//     printf("%-20s %-20s %-20s\n", stack.items, input + in_ptr, action);
+// }
+
+// void parse() {
+//     push('$');
+//     printf("%-20s %-20s %-20s\n", "Stack", "Input", "Action");
+//     printf("-------------------------------------------------------------------\n");
+    
+//     while (input[in_ptr] != '$') {
+//         if (checkandreduce()) printState();
+//         else {
+//             char symbol = input[in_ptr++];
+//             push(symbol);
+//             sprintf(action, "Shift %c", symbol);
+//             printState();
+//         }
+//     }
+//     while (checkandreduce()) printState();
+
+//     if (stack.top == 1 && stack.items[0] == '$' && stack.items[1] == grammar[0].lhs) printf("\nAccepted.\n");
+//     else printf("\nRejected.\n");
+// }
+
+// void loadGrammar(){
+//     FILE *f = fopen("Grammar.txt", "r");
+//     char line[100];
+//     while(fgets(line, sizeof(line), f)) {
+//         line[strcspn(line, "\n")] = 0;
+//         char *token = strtok(line, " ");
+//         grammar[numProds].lhs = token[0];
+//         int i = 0;
+//         while ((token = strtok(NULL, " ")) != NULL) {
+//             if (!strcmp(token, "|") || !strcmp(token, "->")) continue;
+//             grammar[numProds].rhs[i++] = token[0];
+//         }
+//         grammar[numProds++].rhs[i] = '\0';
+//     }
+//     fclose(f);
+// }
+
+// void loadInput() {
+//     FILE *f = fopen("String.txt", "r");
+//     fscanf(f, "%s", input);
+//     len = strlen(input);
+//     input[len++] = '$';
+//     input[len] = '\0';
+//     fclose(f);
+// }
+
+// int main() {
+//     loadGrammar();
+//     loadInput();
+//     initStack();
+//     parse();
+//     return 0;
+// }
