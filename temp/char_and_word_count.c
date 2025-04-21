@@ -5,19 +5,36 @@
 void countWords() {
     char sentence[1000];
     int i, wordCount = 0;
+
     printf("Enter a sentence: ");
     fgets(sentence, sizeof(sentence), stdin);
-    for(i = 0; sentence[i]; i++)
-        if((i == 0 && !isspace(sentence[i])) || (isspace(sentence[i-1]) && !isspace(sentence[i])))
-            wordCount++;
-    printf("Total number of words: %d\n", wordCount);
+    
+    sentence[strcspn(sentence, "\n")] = '\0';
+    char *token = strtok(sentence, " \n\t");
+    while (token != NULL) {
+        wordCount++;
+        token = strtok(NULL, " \n\t");
+    }
+    printf("Number of words in sentence is : %d", wordCount);
 }
 
 void countCharacters() {
+    int count = 0, freq[26] = {0};
     char word[100];
+
     printf("Enter a word: ");
     scanf("%s", word);
-    printf("Number of characters in the word: %d\n", (int)strlen(word));
+
+    for (int i = 0; word[i]; i++) {
+        count++;
+        if (isalpha(word[i])) {
+            freq[tolower(word[i]) - 'a']++;
+        }
+    }
+
+    printf("Number of characters in the word: %d\n", count);
+    printf("Letter frequencies:\n");
+    for (int i = 0; i < 26; i++) if (freq[i] > 0) printf("%c: %d\n", i + 'a', freq[i]);
 }
 
 int main() {

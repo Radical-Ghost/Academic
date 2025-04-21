@@ -41,7 +41,7 @@ void add_symtab(char *label, int addr) {
     symcount++;
 }
 char* get_opcode(char *mnemonic) {
-    for (int i = 0; i < sizeof(optab)/sizeof(optab[0]); i++)
+    for (int i = 0; i < 9; i++)
         if (strcmp(optab[i].opcode, mnemonic) == 0)
             return optab[i].code;
     return NULL;
