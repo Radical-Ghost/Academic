@@ -1,0 +1,4 @@
+START MOV A,10
+LOOP ADD A,B
+     JMP LOOP
+     HLT
