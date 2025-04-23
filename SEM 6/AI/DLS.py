@@ -33,22 +33,25 @@ class Graph:
         visited.remove(node)
         return None
 
-# User Input
-g = Graph()
-num_nodes = int(input("Enter number of parent nodes: "))
+def main():
+    # User Input
+    g = Graph()
+    num_nodes = int(input("Enter number of parent nodes: "))
 
-print("Enter edges (parent left_child right_child) [Use 'None' for missing children]:")
-for _ in range(num_nodes):
-    parent, left, right = input().split()
-    g.add_edge(parent, left if left != "None" else None, right if right != "None" else None)
+    print("Enter edges (parent left_child right_child) [Use 'None' for missing children]:")
+    for _ in range(num_nodes):
+        parent, left, right = input().split()
+        g.add_edge(parent, left if left != "None" else None, right if right != "None" else None)
 
-start = input("Enter start node: ")
-goal = input("Enter goal node: ")
-depth_limit = int(input("Enter depth limit: "))
+    start = input("Enter start node: ")
+    goal = input("Enter goal node: ")
+    depth_limit = int(input("Enter depth limit: "))
 
-result = g.depth_limited_search(start, goal, depth_limit)
+    result = g.depth_limited_search(start, goal, depth_limit)
 
-if result:
-    print("Path Found:", " -> ".join(result))
-else:
-    print("No path found within depth limit")
+    if result:
+        print("Path Found:", " -> ".join(result))
+    else:
+        print("No path found within depth limit")
+
+main()
