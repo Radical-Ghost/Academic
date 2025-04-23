@@ -13,8 +13,8 @@ def select(population):
 def crossover(parent1, parent2):
     return (parent1 + parent2) // 2
 
-def mutate(x, x_min, x_max, mutation_rate=0.1):
-    if random.random() < mutation_rate:
+def mutate(x, x_min, x_max, mutation_rate=0.9):
+    if random.random() > mutation_rate:
         return random.randint(x_min, x_max)
     return x
 

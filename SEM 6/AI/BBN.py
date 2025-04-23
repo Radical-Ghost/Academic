@@ -2,16 +2,14 @@ from pgmpy.models import DiscreteBayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
 from pgmpy.inference import VariableElimination
 
-# Define structure
 model = DiscreteBayesianNetwork([
     ('Flu', 'Fever'),
     ('Flu', 'Cough'),
     ('Allergy', 'Cough')
 ])
 
-# Define CPDs
-cpd_flu = TabularCPD('Flu', 2, [[0.9], [0.1]])  # 10% chance of flu
-cpd_allergy = TabularCPD('Allergy', 2, [[0.7], [0.3]])  # 30% chance of allergy
+cpd_flu = TabularCPD('Flu', 2, [[0.9], [0.1]])
+cpd_allergy = TabularCPD('Allergy', 2, [[0.7], [0.3]])
 
 cpd_fever = TabularCPD(
     variable='Fever', variable_card=2,

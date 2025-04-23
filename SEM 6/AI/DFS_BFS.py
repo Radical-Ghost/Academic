@@ -1,4 +1,4 @@
-# from collections import deque
+from collections import deque
 
 class Graph:
     def __init__(self):
@@ -28,27 +28,27 @@ class Graph:
             
         return path
     
-    # def bfs_traversal(self, start_node, visited=None):
-    #     visited = set()
-    #     queue = deque([start_node])
-    #     path = []
+    def bfs_traversal(self, start_node, visited=None):
+        visited = set()
+        queue = deque([start_node])
+        path = []
 
-    #     while queue:
-    #         node = queue.popleft()
-    #         if node not in visited:
-    #             visited.add(node)
-    #             path.append(node)
-    #             queue.extend(self.graph.get(node, []))
+        while queue:
+            node = queue.popleft()
+            if node not in visited:
+                visited.add(node)
+                path.append(node)
+                queue.extend(self.graph.get(node, []))
         
-    #     return path
+        return path
 
 def main():
     graph = Graph()
 
     num_edges = int(input("Enter the number of edges: "))
     print("Enter edges (node1 node2):")
-    for _ in range(num_edges):
-        u, v = input().split()
+    for i in range(num_edges):
+        u, v = input(f"{i}: ").split()
         graph.add_edge(u, v)
 
     start_node = input("Enter the start node: ")

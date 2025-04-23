@@ -30,7 +30,7 @@ def AStar(graph, s, g, hur):
     return    
 
 def main():
-    n, e = map(int, input("N E").split())
+    n, e = map(int, input("Enter the number of Nodes and Edges: ").split())
 
     graph = {i: [] for i in range(n)}
     hur = {}
@@ -42,7 +42,7 @@ def main():
         hur[u] = h
         hur[v] = hur.get(v, 0)
 
-    s, g = map(int, input("S, G: ").split())
+    s, g = map(int, input("Enter Source and Goal: ").split())
 
     AStar(graph, s, g, hur)
 

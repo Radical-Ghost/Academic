@@ -25,7 +25,7 @@ def main():
         scores.append(val)
 
     height = int(math.log2(n))
-    optimal_value = minmax(0, 0, False, scores, height)
+    optimal_value = minmax(0, 0, True, scores, height)
     print("The optimal value is:", optimal_value)
 
 main()
